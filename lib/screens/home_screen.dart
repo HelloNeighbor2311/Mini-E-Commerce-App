@@ -7,6 +7,7 @@ import '../services/mock_product_service.dart';
 import '../widgets/banner_carousel.dart';
 import '../widgets/category_grid_scroller.dart';
 import '../widgets/product_card.dart';
+import 'cart_screen.dart';
 import 'product_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -154,11 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: <Widget>[
                               IconButton(
                                 onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Mo man hinh gio hang o buoc tiep theo',
-                                      ),
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute<void>(
+                                      builder: (_) => const CartScreen(),
                                     ),
                                   );
                                 },

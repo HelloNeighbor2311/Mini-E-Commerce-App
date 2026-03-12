@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/variation_bottom_sheet.dart';
+import 'cart_screen.dart';
 
 /// Full product detail screen with:
 /// - Hero image transition from HomeScreen
@@ -73,9 +74,18 @@ Bao hanh: Doi / tra trong vong 30 ngay neu co loi nha san xuat. Mien phi van chu
           await context.read<CartProvider>().addProduct(
             widget.product,
             quantity: qty,
+            size: size,
+            color: color,
           );
           if (!context.mounted) return;
           Navigator.pop(context); // close sheet
+          if (buyNow) {
+            await Navigator.push(
+              context,
+              MaterialPageRoute<void>(builder: (_) => const CartScreen()),
+            );
+            return;
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -126,7 +136,14 @@ Bao hanh: Doi / tra trong vong 30 ngay neu co loi nha san xuat. Mien phi van chu
                     children: <Widget>[
                       IconButton(
                         icon: const Icon(Icons.shopping_cart_outlined),
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (_) => const CartScreen(),
+                            ),
+                          );
+                        },
                       ),
                       if (cart.distinctItemCount > 0)
                         Positioned(
@@ -395,7 +412,12 @@ Bao hanh: Doi / tra trong vong 30 ngay neu co loi nha san xuat. Mien phi van chu
       bottomNavigationBar: _BottomActionBar(
         onAddToCart: () => _openVariationSheet(buyNow: false),
         onBuyNow: () => _openVariationSheet(buyNow: true),
-        onGoCart: () => Navigator.pop(context),
+        onGoCart: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(builder: (_) => const CartScreen()),
+          );
+        },
       ),
     );
   }

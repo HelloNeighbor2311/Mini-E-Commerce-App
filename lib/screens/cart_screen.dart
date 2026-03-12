@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../models/cart_line_item.dart';
 import '../providers/cart_provider.dart';
+import 'checkout_screen.dart';
+import 'order_history_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -43,6 +45,19 @@ class CartScreen extends StatelessWidget {
         title: const Text('Gio hang'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.receipt_long_outlined),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (_) => const OrderHistoryScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Consumer<CartProvider>(
         builder: (BuildContext context, CartProvider cart, _) {
@@ -142,7 +157,19 @@ class CartScreen extends StatelessWidget {
                 SizedBox(
                   height: 42,
                   child: ElevatedButton(
-                    onPressed: cart.selectedTotalAmount > 0 ? () {} : null,
+                    onPressed: cart.selectedTotalAmount > 0
+                        ? () {
+                            final List<CartLineItem> selected = cart
+                                .selectedItems
+                                .toList(growable: false);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (_) => CheckoutScreen(items: selected),
+                              ),
+                            );
+                          }
+                        : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFF5722),
                       foregroundColor: Colors.white,

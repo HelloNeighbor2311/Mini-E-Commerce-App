@@ -23,6 +23,10 @@ class CartProvider extends ChangeNotifier {
       .where((CartLineItem e) => e.selected)
       .fold<int>(0, (int sum, CartLineItem e) => sum + e.lineTotal);
 
+  List<CartLineItem> get selectedItems => _items.values
+      .where((CartLineItem e) => e.selected)
+      .toList(growable: false);
+
   String _lineKey(String productId, String size, String color) {
     return '$productId|$size|$color';
   }
@@ -148,6 +152,14 @@ class CartProvider extends ChangeNotifier {
 
   Future<void> removeItem(String key) async {
     _items.remove(key);
+    notifyListeners();
+    await _persist();
+  }
+
+  Future<void> removeItems(Iterable<String> keys) async {
+    for (final String key in keys) {
+      _items.remove(key);
+    }
     notifyListeners();
     await _persist();
   }

@@ -29,7 +29,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   void initState() {
     super.initState();
-    _addressController.text = '123 Duong ABC, Quan 1, TP.HCM';
+    _addressController.text = '123 Đường ABC, Quận 1, TP.HCM';
   }
 
   @override
@@ -42,14 +42,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final String address = _addressController.text.trim();
     if (address.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui long nhap dia chi nhan hang')),
+        const SnackBar(content: Text('Vui lòng nhập địa chỉ nhận hàng')),
       );
       return;
     }
 
     if (widget.items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Khong co san pham de thanh toan')),
+        const SnackBar(content: Text('Không có sản phẩm để thanh toán')),
       );
       return;
     }
@@ -78,8 +78,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Dat hang thanh cong'),
-            content: const Text('Don hang cua ban da duoc tao thanh cong.'),
+            title: const Text('Đặt hàng thành công'),
+            content: const Text('Đơn hàng của bạn đã được tạo thành công.'),
             actions: <Widget>[
               FilledButton(
                 onPressed: () => Navigator.pop(context),
@@ -109,30 +109,34 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Thanh toan'),
+        title: const Text('Thanh toán'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
       ),
       body: widget.items.isEmpty
-          ? const Center(child: Text('Khong co san pham da chon'))
+          ? const Center(child: Text('Không có sản phẩm đã chọn'))
           : ListView(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 110),
               children: <Widget>[
                 _SectionCard(
-                  title: 'Dia chi nhan hang',
+                  title: 'Địa chỉ nhận hàng',
                   child: TextField(
                     controller: _addressController,
                     minLines: 2,
                     maxLines: 3,
                     decoration: const InputDecoration(
-                      hintText: 'Nhap dia chi cu the',
+                      hintText: 'Nhập địa chỉ cụ thể',
                       border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 _SectionCard(
-                  title: 'Phuong thuc thanh toan',
+                  title: 'Phương thức thanh toán',
                   child: Column(
                     children: <Widget>[
                       RadioListTile<String>(
@@ -143,8 +147,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             setState(() => _paymentMethod = value);
                           }
                         },
-                        title: const Text('COD - Thanh toan khi nhan hang'),
+                        title: const Text('COD - Thanh toán khi nhận hàng'),
                         contentPadding: EdgeInsets.zero,
+                        visualDensity: VisualDensity.compact,
                       ),
                       RadioListTile<String>(
                         value: 'Momo',
@@ -154,26 +159,28 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             setState(() => _paymentMethod = value);
                           }
                         },
-                        title: const Text('Momo - Vi dien tu'),
+                        title: const Text('Momo - Ví điện tử'),
                         contentPadding: EdgeInsets.zero,
+                        visualDensity: VisualDensity.compact,
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 10),
                 _SectionCard(
-                  title: 'San pham da chon (${widget.items.length})',
+                  title: 'Sản phẩm đã chọn (${widget.items.length})',
                   child: Column(
                     children: widget.items.map((CartLineItem item) {
                       return ListTile(
                         contentPadding: EdgeInsets.zero,
+                        dense: true,
                         title: Text(
                           item.product.name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         subtitle: Text(
-                          'Size ${item.size}, Mau ${item.color} x${item.quantity}',
+                          'Size ${item.size}, Màu ${item.color} x${item.quantity}',
                         ),
                         trailing: Text(
                           _fmt(item.lineTotal),
@@ -214,7 +221,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   const Text(
-                    'Tong thanh toan',
+                    'Tổng thanh toán',
                     style: TextStyle(fontSize: 12, color: Colors.black54),
                   ),
                   Text(
@@ -245,7 +252,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           color: Colors.white,
                         ),
                       )
-                    : const Text('Dat hang'),
+                    : const Text('Đặt hàng'),
               ),
             ),
           ],

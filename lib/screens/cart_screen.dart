@@ -17,19 +17,19 @@ class CartScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Xoa san pham?'),
-          content: Text('Ban co muon xoa ${item.product.name} khoi gio hang?'),
+          title: const Text('Xóa sản phẩm?'),
+          content: Text('Bạn có muốn xóa ${item.product.name} khỏi giỏ hàng?'),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Khong'),
+              child: const Text('Không'),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, true),
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFE53935),
               ),
-              child: const Text('Xoa'),
+              child: const Text('Xóa'),
             ),
           ],
         );
@@ -42,7 +42,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gio hang'),
+        title: const Text('Giỏ hàng'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
         actions: <Widget>[
@@ -90,7 +90,7 @@ class CartScreen extends StatelessWidget {
                 onDismissed: (_) {
                   context.read<CartProvider>().removeItem(item.key);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Da xoa san pham khoi gio')),
+                    const SnackBar(content: Text('Đã xóa sản phẩm khỏi giỏ')),
                   );
                 },
                 child: _CartItemTile(item: item, fmt: _fmt),
@@ -130,17 +130,19 @@ class CartScreen extends StatelessWidget {
                         }
                       : null,
                 ),
-                const Text(
-                  'Chon tat ca',
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                const Expanded(
+                  child: Text(
+                    'Chọn tất cả',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                const Spacer(),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     const Text(
-                      'Tong thanh toan',
+                      'Tổng thanh toán',
                       style: TextStyle(fontSize: 12, color: Colors.black54),
                     ),
                     Text(
@@ -174,7 +176,7 @@ class CartScreen extends StatelessWidget {
                       backgroundColor: const Color(0xFFFF5722),
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text('Mua hang'),
+                    child: const Text('Mua hàng'),
                   ),
                 ),
               ],
@@ -203,19 +205,19 @@ class _CartItemTile extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('So luong se ve 0'),
-          content: const Text('Ban co muon xoa san pham khoi gio hang?'),
+          title: const Text('Số lượng sẽ về 0'),
+          content: const Text('Bạn có muốn xóa sản phẩm khỏi giỏ hàng?'),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Khong'),
+              child: const Text('Không'),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, true),
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFE53935),
               ),
-              child: const Text('Xoa'),
+              child: const Text('Xóa'),
             ),
           ],
         );
@@ -279,7 +281,7 @@ class _CartItemTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Phan loai: Size ${item.size}, Mau ${item.color}',
+                    'Phân loại: Size ${item.size}, Màu ${item.color}',
                     style: const TextStyle(fontSize: 12, color: Colors.black54),
                   ),
                   const SizedBox(height: 8),
@@ -369,12 +371,12 @@ class _EmptyCart extends StatelessWidget {
             ),
             SizedBox(height: 12),
             Text(
-              'Gio hang dang trong',
+              'Giỏ hàng đang trống',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
             SizedBox(height: 6),
             Text(
-              'Hay them san pham de tiep tuc mua sam.',
+              'Hãy thêm sản phẩm để tiếp tục mua sắm.',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.black54),
             ),

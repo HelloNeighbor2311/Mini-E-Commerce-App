@@ -17,8 +17,8 @@ void main() {
     );
     await tester.pump(const Duration(seconds: 1));
 
-    expect(find.text('Goi y hom nay'), findsOneWidget);
-    expect(find.text('Danh muc noi bat'), findsOneWidget);
+    expect(find.text('Gợi ý hôm nay'), findsOneWidget);
+    expect(find.text('Danh mục nổi bật'), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();

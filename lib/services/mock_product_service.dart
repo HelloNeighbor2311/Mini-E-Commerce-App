@@ -11,14 +11,14 @@ class MockProductService {
   ];
 
   static const List<Map<String, String>> categories = <Map<String, String>>[
-    {'title': 'Thoi trang', 'icon': 'checkroom'},
-    {'title': 'Dien thoai', 'icon': 'smartphone'},
-    {'title': 'My pham', 'icon': 'face_retouching_natural'},
-    {'title': 'Gia dung', 'icon': 'kitchen'},
-    {'title': 'Me va be', 'icon': 'child_care'},
-    {'title': 'Bach hoa', 'icon': 'shopping_basket'},
+    {'title': 'Thời trang', 'icon': 'checkroom'},
+    {'title': 'Điện thoại', 'icon': 'smartphone'},
+    {'title': 'Mỹ phẩm', 'icon': 'face_retouching_natural'},
+    {'title': 'Gia dụng', 'icon': 'kitchen'},
+    {'title': 'Mẹ và bé', 'icon': 'child_care'},
+    {'title': 'Bách hóa', 'icon': 'shopping_basket'},
     {'title': 'Laptop', 'icon': 'laptop_mac'},
-    {'title': 'The thao', 'icon': 'sports_soccer'},
+    {'title': 'Thể thao', 'icon': 'sports_soccer'},
   ];
 
   static const int _totalProducts = 100;
@@ -41,7 +41,7 @@ class MockProductService {
       final int price = 79000 + (id * 3500);
       return Product(
         id: 'p$id',
-        name: 'San pham hot trend #$id - chat lieu cao cap, mau dep, gia tot',
+        name: 'Sản phẩm hot trend #$id - chất liệu cao cấp, màu đẹp, giá tốt',
         price: price,
         originalPrice: price + 40000,
         imageUrls: <String>[
@@ -58,10 +58,10 @@ class MockProductService {
 
   List<String> _tagByIndex(int index) {
     if (index % 5 == 0) {
-      return <String>['Mall', 'Giam 50%'];
+      return <String>['Mall', 'Giảm 50%'];
     }
     if (index % 3 == 0) {
-      return <String>['Yeu thich'];
+      return <String>['Yêu thích'];
     }
     return <String>['Giao nhanh'];
   }

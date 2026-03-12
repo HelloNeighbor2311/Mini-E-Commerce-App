@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     const Text(
-                      'Danh muc noi bat',
+                      'Danh mục nổi bật',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -249,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
-                  'Goi y hom nay',
+                  'Gợi ý hôm nay',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                 ),
               ),
@@ -278,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         return;
                       }
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Da them vao gio hang')),
+                        const SnackBar(content: Text('Đã thêm vào giỏ hàng')),
                       );
                     },
                   );
@@ -318,16 +318,16 @@ class _SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 42,
+      height: 44,
       child: TextField(
         controller: controller,
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
-          hintText: 'Tim kiem san pham, shop... ',
+          hintText: 'Tìm kiếm sản phẩm, shop...',
           filled: true,
           fillColor: Colors.white,
           prefixIcon: const Icon(Icons.search),
-          contentPadding: const EdgeInsets.symmetric(vertical: 0),
+          contentPadding: const EdgeInsets.symmetric(vertical: 2),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(999),
             borderSide: BorderSide.none,

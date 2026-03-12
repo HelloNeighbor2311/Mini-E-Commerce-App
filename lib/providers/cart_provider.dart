@@ -55,7 +55,7 @@ class CartProvider extends ChangeNotifier {
       final int quantity = int.tryParse(parts.length > 1 ? parts[1] : '1') ?? 1;
       final Product fallbackProduct = Product(
         id: id,
-        name: 'San pham $id',
+        name: 'Sản phẩm $id',
         price: 0,
         originalPrice: 0,
         imageUrls: const <String>[

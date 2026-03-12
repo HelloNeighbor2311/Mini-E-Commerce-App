@@ -48,16 +48,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String _fmt(int value) => '${NumberFormat('#,##0', 'vi_VN').format(value)}d';
 
   static String _buildDescription(String id) =>
-      '''San pham #$id thuoc dong cao cap, duoc san xuat tu chat lieu nguyen sinh tu nhien, than thien voi moi truong. Thiet ke hien dai phu hop nhieu phong cach thoi trang.
+      '''Sản phẩm #$id thuộc dòng cao cấp, được sản xuất từ chất liệu nguyên sinh tự nhiên, thân thiện với môi trường. Thiết kế hiện đại phù hợp nhiều phong cách thời trang.
 
-• Chat lieu: Cotton 100% nguyen chat, thoang mat, tham mo hoi tot
-• Kieu dang: Regular fit — khong qua rong cung khong qua chat
-• Do ben: Ben mau sau nhieu lan giat, khong bi xo long
-• Ung dung: Di lam, di choi, du lich, tap the duc
+  • Chất liệu: Cotton 100% nguyên chất, thoáng mát, thấm mồ hôi tốt
+  • Kiểu dáng: Regular fit — không quá rộng cũng không quá chật
+  • Độ bền: Bền màu sau nhiều lần giặt, không bị xù lông
+  • Ứng dụng: Đi làm, đi chơi, du lịch, tập thể dục
 
-Huong dan su dung: Giat bang nuoc lanh / am duoi 40°C. Khong su dung may say. Phoi trong bong mat de bao ve mau sac va chat lieu vai.
+  Hướng dẫn sử dụng: Giặt bằng nước lạnh / ấm dưới 40°C. Không sử dụng máy sấy. Phơi trong bóng mát để bảo vệ màu sắc và chất liệu vải.
 
-Bao hanh: Doi / tra trong vong 30 ngay neu co loi nha san xuat. Mien phi van chuyen khi doi tra hang.''';
+  Bảo hành: Đổi / trả trong vòng 30 ngày nếu có lỗi nhà sản xuất. Miễn phí vận chuyển khi đổi trả hàng.''';
 
   // ── BottomSheet launcher ────────────────────────────────────────────────────
 
@@ -89,7 +89,7 @@ Bao hanh: Doi / tra trong vong 30 ngay neu co loi nha san xuat. Mien phi van chu
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Da them $qty san pham vao gio hang!',
+                'Đã thêm $qty sản phẩm vào giỏ hàng!',
                 style: const TextStyle(color: Colors.white),
               ),
               backgroundColor: const Color(0xFF388E3C),
@@ -359,7 +359,7 @@ Bao hanh: Doi / tra trong vong 30 ngay neu co loi nha san xuat. Mien phi van chu
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Phan loai hang',
+                            'Phân loại hàng',
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.black54,
@@ -367,7 +367,7 @@ Bao hanh: Doi / tra trong vong 30 ngay neu co loi nha san xuat. Mien phi van chu
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Chon kich co, mau sac',
+                            'Chọn kích cỡ, màu sắc',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -475,7 +475,7 @@ class _DescriptionBlock extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const Text(
-          'Mo ta san pham',
+          'Mô tả sản phẩm',
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 10),
@@ -501,7 +501,7 @@ class _DescriptionBlock extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
-                  expanded ? 'Thu gon' : 'Xem them',
+                  expanded ? 'Thu gọn' : 'Xem thêm',
                   style: const TextStyle(
                     color: Color(0xFFFF5722),
                     fontWeight: FontWeight.w600,
@@ -571,7 +571,7 @@ class _BottomActionBar extends StatelessWidget {
                 children: <Widget>[
                   _IconAction(
                     icon: Icons.shopping_cart_outlined,
-                    label: 'Gio hang',
+                    label: 'Giỏ hàng',
                     onTap: onGoCart,
                   ),
                   if (cart.distinctItemCount > 0)
@@ -610,10 +610,10 @@ class _BottomActionBar extends StatelessWidget {
                       ),
                     ),
                     child: const Text(
-                      'Them vao gio',
+                      'Thêm vào giỏ',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
-                        fontSize: 13,
+                        fontSize: 12,
                       ),
                     ),
                   ),

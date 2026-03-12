@@ -121,7 +121,7 @@ class _BannerCarouselState extends State<BannerCarousel> {
                         left: 12,
                         bottom: 12,
                         child: Text(
-                          'Deal moi moi ngay',
+                          'Deal mới mỗi ngày',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,

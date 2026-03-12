@@ -30,9 +30,9 @@ class _VariationBottomSheetState extends State<VariationBottomSheet> {
 
   static const List<_ColorOption> _colorOptions = <_ColorOption>[
     _ColorOption(label: 'Xanh', color: Color(0xFF1976D2)),
-    _ColorOption(label: 'Do', color: Color(0xFFE53935)),
-    _ColorOption(label: 'Trang', color: Color(0xFFEEEEEE)),
-    _ColorOption(label: 'Vang', color: Color(0xFFFDD835)),
+    _ColorOption(label: 'Đỏ', color: Color(0xFFE53935)),
+    _ColorOption(label: 'Trắng', color: Color(0xFFEEEEEE)),
+    _ColorOption(label: 'Vàng', color: Color(0xFFFDD835)),
   ];
 
   String? _selectedSize;
@@ -108,7 +108,7 @@ class _VariationBottomSheetState extends State<VariationBottomSheet> {
                             <String>[
                               if (_selectedSize != null) 'Size: $_selectedSize',
                               if (_selectedColor != null)
-                                'Mau: $_selectedColor',
+                                'Màu: $_selectedColor',
                             ].join(', '),
                             style: const TextStyle(
                               fontSize: 12,
@@ -116,7 +116,7 @@ class _VariationBottomSheetState extends State<VariationBottomSheet> {
                             ),
                           ),
                         Text(
-                          'So luong: $_quantity',
+                          'Số lượng: $_quantity',
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.black54,
@@ -144,7 +144,7 @@ class _VariationBottomSheetState extends State<VariationBottomSheet> {
                   children: <Widget>[
                     // Size chips
                     const Text(
-                      'Kich co',
+                      'Kích cỡ',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -167,7 +167,7 @@ class _VariationBottomSheetState extends State<VariationBottomSheet> {
 
                     // Color chips
                     const Text(
-                      'Mau sac',
+                      'Màu sắc',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -194,7 +194,7 @@ class _VariationBottomSheetState extends State<VariationBottomSheet> {
                       children: <Widget>[
                         const Expanded(
                           child: Text(
-                            'So luong',
+                            'Số lượng',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
@@ -236,7 +236,7 @@ class _VariationBottomSheetState extends State<VariationBottomSheet> {
                         child: Text(
                           widget.buyNow
                               ? 'Mua ngay'
-                              : 'Xac nhan - Them vao gio',
+                              : 'Xác nhận - Thêm vào giỏ',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,

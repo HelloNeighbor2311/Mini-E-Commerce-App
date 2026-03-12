@@ -14,17 +14,17 @@ class OrderHistoryScreen extends StatelessWidget {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Don mua'),
+          title: const Text('Đơn mua'),
           backgroundColor: Colors.white,
           foregroundColor: Colors.black87,
           bottom: const TabBar(
             isScrollable: true,
             tabAlignment: TabAlignment.start,
             tabs: <Widget>[
-              Tab(text: 'Cho xac nhan'),
-              Tab(text: 'Dang giao'),
-              Tab(text: 'Da giao'),
-              Tab(text: 'Da huy'),
+              Tab(text: 'Chờ xác nhận'),
+              Tab(text: 'Đang giao'),
+              Tab(text: 'Đã giao'),
+              Tab(text: 'Đã hủy'),
             ],
           ),
         ),
@@ -54,7 +54,7 @@ class _OrderStatusTab extends StatelessWidget {
 
         if (orders.isEmpty) {
           return const Center(
-            child: Text('Chua co don hang trong trang thai nay'),
+            child: Text('Chưa có đơn hàng trong trạng thái này'),
           );
         }
 
@@ -110,12 +110,12 @@ class _OrderCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Thanh toan: ${order.paymentMethod}',
+            'Thanh toán: ${order.paymentMethod}',
             style: const TextStyle(color: Colors.black54),
           ),
           const SizedBox(height: 6),
           Text(
-            'Dia chi: ${order.address}',
+            'Địa chỉ: ${order.address}',
             style: const TextStyle(color: Colors.black54),
           ),
           const Divider(height: 20),
@@ -123,7 +123,7 @@ class _OrderCard extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(bottom: 6),
               child: Text(
-                '${e.product.name} - Size ${e.size}, Mau ${e.color} x${e.quantity}',
+                '${e.product.name} - Size ${e.size}, Màu ${e.color} x${e.quantity}',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -131,7 +131,7 @@ class _OrderCard extends StatelessWidget {
           }),
           if (order.items.length > 3)
             Text(
-              '+${order.items.length - 3} san pham khac',
+              '+${order.items.length - 3} sản phẩm khác',
               style: const TextStyle(color: Colors.black54),
             ),
           const SizedBox(height: 8),
@@ -139,7 +139,7 @@ class _OrderCard extends StatelessWidget {
             children: <Widget>[
               const Spacer(),
               Text(
-                'Tong: ${_fmt(order.totalAmount)}',
+                'Tổng: ${_fmt(order.totalAmount)}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w800,
                   color: Color(0xFFE53935),

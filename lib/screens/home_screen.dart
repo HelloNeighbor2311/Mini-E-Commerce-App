@@ -138,9 +138,46 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? const Color(0xFFFF5722)
                   : Colors.transparent,
               elevation: _isCollapsed ? 2 : 0,
-              expandedHeight: 92,
+              expandedHeight: 132,
               titleSpacing: 10,
-              title: _SearchBar(controller: _searchController),
+              title: _isCollapsed
+                  ? _SearchBar(controller: _searchController)
+                  : null,
+              flexibleSpace: _isCollapsed
+                  ? null
+                  : FlexibleSpaceBar(
+                      background: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 16,
+                              top: 12,
+                              right: 16,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const <Widget>[
+                                Text(
+                                  'TH4 - Nhóm G3-C7',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: _SearchBar(controller: _searchController),
+                          ),
+                        ],
+                      ),
+                    ),
               actions: <Widget>[
                 IconButton(
                   onPressed: () {

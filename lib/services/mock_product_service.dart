@@ -1,5 +1,5 @@
-import 'dart:async';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../models/product.dart';
 
 class MockProductService {
@@ -7,62 +7,80 @@ class MockProductService {
     'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80',
   ];
 
   static const List<Map<String, String>> categories = <Map<String, String>>[
-    {'title': 'Thời trang', 'icon': 'checkroom'},
-    {'title': 'Điện thoại', 'icon': 'smartphone'},
-    {'title': 'Mỹ phẩm', 'icon': 'face_retouching_natural'},
-    {'title': 'Gia dụng', 'icon': 'kitchen'},
-    {'title': 'Mẹ và bé', 'icon': 'child_care'},
-    {'title': 'Bách hóa', 'icon': 'shopping_basket'},
-    {'title': 'Laptop', 'icon': 'laptop_mac'},
-    {'title': 'Thể thao', 'icon': 'sports_soccer'},
+    {'title': 'Điện thoại', 'icon': 'smartphone', 'tag': 'smartphones'},
+    {'title': 'Laptop', 'icon': 'laptop_mac', 'tag': 'laptops'},
+    {'title': 'Mỹ phẩm', 'icon': 'face_retouching_natural', 'tag': 'skincare'},
+    {'title': 'Trang trí', 'icon': 'home', 'tag': 'home-decoration'},
+    {'title': 'Đồ nữ', 'icon': 'checkroom', 'tag': 'womens-dresses'},
+    {'title': 'Đồ nam', 'icon': 'dry_cleaning', 'tag': 'mens-shirts'},
+    {'title': 'Giày dép', 'icon': 'directions_run', 'tag': 'mens-shoes'},
+    {'title': 'Đồng hồ', 'icon': 'watch', 'tag': 'mens-watches'},
+    {'title': 'Trang sức', 'icon': 'diamond', 'tag': 'womens-jewellery'},
+    {'title': 'Xe cộ', 'icon': 'directions_car', 'tag': 'automotive'},
   ];
 
-  static const int _totalProducts = 100;
-
+  // Gọi DummyJSON API có hỗ trợ phân trang chuẩn xác
   Future<List<Product>> fetchProducts({
     required int page,
     required int pageSize,
+    String? categoryFilter, // Thêm biến này để sau này truyền Tag vào lọc
+    String? searchKeyword,
   }) async {
-    await Future<void>.delayed(const Duration(milliseconds: 850));
+    try {
+      // Tính toán vị trí bỏ qua (skip) cho tính năng cuộn tải thêm
+      final int skip = (page - 1) * pageSize;
+      String url;
+      
+      if (searchKeyword != null && searchKeyword.isNotEmpty) {
+        // Ưu tiên 1: Nếu người dùng đang gõ tìm kiếm -> Gọi API Search
+        url = 'https://dummyjson.com/products/search?q=$searchKeyword&limit=$pageSize&skip=$skip';
+      } else if (categoryFilter != null && categoryFilter != 'all') {
+        // Ưu tiên 2: Lọc theo danh mục (nếu không tìm kiếm)
+        url = 'https://dummyjson.com/products/category/$categoryFilter?limit=$pageSize&skip=$skip';
+      } else {
+        // Mặc định: Lấy tất cả
+        url = 'https://dummyjson.com/products?limit=$pageSize&skip=$skip';
+      }
 
-    final int start = (page - 1) * pageSize;
-    if (start >= _totalProducts) {
-      return <Product>[];
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        final List<dynamic> productsList = data['products'];
+
+        return productsList.map((json) {
+          // Xử lý giá tiền: DummyJSON là tiền Đô ($), nhân 24k ra VNĐ
+          double usdPrice = json['price'].toDouble();
+          int vndPrice = (usdPrice * 24000).toInt();
+          
+          // Tính giá gốc dựa trên % giảm giá API trả về
+          double discount = json['discountPercentage'].toDouble();
+          int originalPrice = (vndPrice / (1 - (discount / 100))).toInt();
+
+          return Product(
+            id: json['id'].toString(),
+            name: json['title'], 
+            price: vndPrice,
+            originalPrice: originalPrice,
+            
+            // DummyJSON cho hẳn một list ảnh, lấy luôn cho xịn
+            imageUrls: List<String>.from(json['images']), 
+            
+            // Ép cái Category của API thành Tag hiển thị trên UI
+            tags: [
+              json['category'].toString().toUpperCase(), // Ném danh mục thành Tag
+              'Giảm ${discount.toInt()}%' // Tag giảm giá chuẩn
+            ], 
+            soldCount: json['stock'] * 12, // Fake số lượng đã bán dựa trên tồn kho
+          );
+        }).toList();
+      }
+    } catch (e) {
+      print('Lỗi fetch DummyJSON API: $e');
     }
-
-    final int end = (start + pageSize).clamp(0, _totalProducts);
-
-    return List<Product>.generate(end - start, (int index) {
-      final int id = start + index + 1;
-      final int price = 79000 + (id * 3500);
-      return Product(
-        id: 'p$id',
-        name: 'Sản phẩm hot trend #$id - chất liệu cao cấp, màu đẹp, giá tốt',
-        price: price,
-        originalPrice: price + 40000,
-        imageUrls: <String>[
-          'https://picsum.photos/seed/product${id}a/600/600',
-          'https://picsum.photos/seed/product${id}b/600/600',
-          'https://picsum.photos/seed/product${id}c/600/600',
-          'https://picsum.photos/seed/product${id}d/600/600',
-        ],
-        tags: _tagByIndex(id),
-        soldCount: 300 + (id * 12),
-      );
-    });
-  }
-
-  List<String> _tagByIndex(int index) {
-    if (index % 5 == 0) {
-      return <String>['Mall', 'Giảm 50%'];
-    }
-    if (index % 3 == 0) {
-      return <String>['Yêu thích'];
-    }
-    return <String>['Giao nhanh'];
+    return <Product>[];
   }
 }

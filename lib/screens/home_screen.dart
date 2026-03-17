@@ -32,6 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _hasMore = true;
   double _offset = 0;
 
+  //THÊM BIẾN NÀY ĐỂ LƯU TRẠNG THÁI LỌC
+  String _selectedCategory = 'all';
+  String _searchKeyword = '';
+
   @override
   void initState() {
     super.initState();
@@ -51,23 +55,22 @@ class _HomeScreenState extends State<HomeScreen> {
   bool get _isCollapsed => _offset > 18;
 
   Future<void> _loadFirstPage() async {
-    if (_isRefreshing) {
-      return;
-    }
+    if (_isRefreshing) return;
     setState(() {
       _isRefreshing = true;
       _currentPage = 1;
       _hasMore = true;
     });
 
+    // 👉 TRUYỀN CATEGORY FILTER VÀO API
     final List<Product> firstPage = await _service.fetchProducts(
       page: _currentPage,
       pageSize: _pageSize,
+      categoryFilter: _selectedCategory,
+      searchKeyword: _searchKeyword,
     );
 
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
 
     setState(() {
       _products
@@ -79,23 +82,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadMore() async {
-    if (_isLoadingMore || _isRefreshing || !_hasMore) {
-      return;
-    }
-
-    setState(() {
-      _isLoadingMore = true;
-    });
+    if (_isLoadingMore || _isRefreshing || !_hasMore) return;
+    setState(() => _isLoadingMore = true);
 
     final int nextPage = _currentPage + 1;
+    // 👉 TRUYỀN CATEGORY FILTER VÀO API
     final List<Product> nextProducts = await _service.fetchProducts(
       page: nextPage,
       pageSize: _pageSize,
+      categoryFilter: _selectedCategory,
+      searchKeyword: _searchKeyword,
     );
 
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
 
     setState(() {
       _currentPage = nextPage;
@@ -140,44 +139,15 @@ class _HomeScreenState extends State<HomeScreen> {
               elevation: _isCollapsed ? 2 : 0,
               expandedHeight: 132,
               titleSpacing: 10,
-              title: _isCollapsed
-                  ? _SearchBar(controller: _searchController)
-                  : null,
-              flexibleSpace: _isCollapsed
-                  ? null
-                  : FlexibleSpaceBar(
-                      background: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 16,
-                              top: 12,
-                              right: 16,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const <Widget>[
-                                Text(
-                                  'TH4 - Nhóm G3-C7',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: _SearchBar(controller: _searchController),
-                          ),
-                        ],
-                      ),
-                    ),
+              title: _SearchBar(
+                controller: _searchController,
+                onSearch: (String keyword) {
+                  setState(() {
+                    _searchKeyword = keyword.trim();
+                  });
+                  _loadFirstPage();
+                },
+              ),
               actions: <Widget>[
                 IconButton(
                   onPressed: () {
@@ -276,6 +246,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 10),
                     CategoryGridScroller(
                       categories: MockProductService.categories,
+                      selectedCategoryTag: _selectedCategory,
+                      onCategorySelected: (String tag) {
+                        // Nếu bấm lại vào ô đang chọn -> Bỏ lọc, hiện tất cả
+                        if (_selectedCategory == tag) {
+                          setState(() => _selectedCategory = 'all');
+                        } else {
+                          // Nếu bấm vào ô mới -> Lọc theo ô đó
+                          setState(() => _selectedCategory = tag);
+                        }
+
+                        // Hiển thị vòng quay loading và tải lại danh sách
+                        _loadFirstPage();
+
+                        // (Tùy chọn) Tự động cuộn xuống chỗ sản phẩm một chút cho đẹp
+                        _scrollController.animateTo(
+                          300,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -324,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisCount: 2,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  childAspectRatio: 0.65,
+                  childAspectRatio: 0.63,
                 ),
               ),
             ),
@@ -348,9 +338,10 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _SearchBar extends StatelessWidget {
-  const _SearchBar({required this.controller});
+  const _SearchBar({required this.controller, required this.onSearch});
 
   final TextEditingController controller;
+  final Function(String) onSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -359,8 +350,9 @@ class _SearchBar extends StatelessWidget {
       child: TextField(
         controller: controller,
         textInputAction: TextInputAction.search,
+        onSubmitted: onSearch, // GỌI HÀM KHI NGƯỜI DÙNG ẤN ENTER/SEARCH
         decoration: InputDecoration(
-          hintText: 'Tìm kiếm sản phẩm, shop...',
+          hintText: 'Tìm kiếm sản phẩm...',
           filled: true,
           fillColor: Colors.white,
           prefixIcon: const Icon(Icons.search),

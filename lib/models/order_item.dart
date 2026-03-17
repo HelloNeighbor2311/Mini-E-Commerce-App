@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'cart_line_item.dart';
 
 enum OrderStatus { pending, shipping, delivered, cancelled }
@@ -34,10 +36,16 @@ class OrderItem {
   }
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
+    final dynamic createdAtRaw = json['createdAt'];
+    final DateTime createdAt = createdAtRaw is Timestamp
+        ? createdAtRaw.toDate()
+        : createdAtRaw is DateTime
+        ? createdAtRaw
+        : DateTime.parse(createdAtRaw as String);
     final String statusRaw = (json['status'] as String?) ?? 'pending';
     return OrderItem(
       id: json['id'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: createdAt,
       address: json['address'] as String,
       paymentMethod: json['paymentMethod'] as String,
       status: OrderStatus.values.firstWhere(

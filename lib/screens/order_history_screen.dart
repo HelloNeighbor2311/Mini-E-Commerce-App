@@ -10,6 +10,31 @@ class OrderHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const _OrderHistoryView();
+  }
+}
+
+class _OrderHistoryView extends StatefulWidget {
+  const _OrderHistoryView();
+
+  @override
+  State<_OrderHistoryView> createState() => _OrderHistoryViewState();
+}
+
+class _OrderHistoryViewState extends State<_OrderHistoryView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      context.read<OrderProvider>().fetchOrders();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -50,6 +75,10 @@ class _OrderStatusTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(
       builder: (BuildContext context, OrderProvider provider, _) {
+        if (provider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
         final List<OrderItem> orders = provider.byStatus(status);
 
         if (orders.isEmpty) {

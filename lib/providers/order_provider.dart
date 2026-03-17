@@ -1,33 +1,43 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../config/app_data_config.dart';
 import '../models/cart_line_item.dart';
 import '../models/order_item.dart';
+import '../services/firestore_order_service.dart';
 
 class OrderProvider extends ChangeNotifier {
-  static const String _storageKey = 'orders_v1';
+  OrderProvider({FirestoreOrderService? firestoreOrderService})
+    : _firestoreOrderService = firestoreOrderService ?? FirestoreOrderService();
 
+  final FirestoreOrderService _firestoreOrderService;
   final List<OrderItem> _orders = <OrderItem>[];
+  bool _isLoading = false;
 
   List<OrderItem> get orders => List<OrderItem>.unmodifiable(_orders);
+  bool get isLoading => _isLoading;
 
-  Future<void> loadFromStorage() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> raw = prefs.getStringList(_storageKey) ?? <String>[];
+  Future<void> fetchOrders() async {
+    if (!AppDataConfig.useFirebase) {
+      _orders.clear();
+      notifyListeners();
+      return;
+    }
 
-    _orders
-      ..clear()
-      ..addAll(
-        raw.map((String e) {
-          final Map<String, dynamic> json =
-              jsonDecode(e) as Map<String, dynamic>;
-          return OrderItem.fromJson(json);
-        }),
-      );
-
+    _isLoading = true;
     notifyListeners();
+
+    try {
+      final List<OrderItem> remoteOrders = await _firestoreOrderService
+          .fetchOrders();
+      _orders
+        ..clear()
+        ..addAll(remoteOrders);
+    } catch (e) {
+      debugPrint('Không thể tải đơn hàng từ Firebase: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   List<OrderItem> byStatus(OrderStatus status) {
@@ -53,15 +63,15 @@ class OrderProvider extends ChangeNotifier {
 
     _orders.insert(0, order);
     notifyListeners();
-    await _persist();
-    return order;
-  }
 
-  Future<void> _persist() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> raw = _orders
-        .map((OrderItem e) => jsonEncode(e.toJson()))
-        .toList();
-    await prefs.setStringList(_storageKey, raw);
+    if (AppDataConfig.useFirebase) {
+      try {
+        await _firestoreOrderService.saveOrder(order);
+      } catch (e) {
+        debugPrint('Không thể sync đơn hàng lên Firebase: $e');
+      }
+    }
+
+    return order;
   }
 }
